@@ -17,11 +17,13 @@ export default class Erc20Holdable implements ContractRepository {
   private _maxBets = BettingGameConstants.max_bets;
   private _initialBalance = BettingGameConstants.initial_balance;
   private _amount = BettingGameConstants.amount;
+  private _bet_pending = BettingGameConstants.bet_pending;
   private _gasLimit = web3.utils.toWei('1');
 
   public async newPlayerAddress(): Promise <string>{
 
     let accounts = await this.getAccounts();
+
     let newPlayerAddress;
     if( players.length == accounts.length - 1) {
       let newPlayerAccount = await web3.eth.accounts.create();
@@ -32,7 +34,6 @@ export default class Erc20Holdable implements ContractRepository {
     }
 
     players.push(newPlayerAddress);
-
 
     return newPlayerAddress;
   }
@@ -65,7 +66,7 @@ export default class Erc20Holdable implements ContractRepository {
           bet = {
             id: totalBets,
             address: address,
-            status: 'pending',
+            status: this._bet_pending,
             amount: amount
           }
 
@@ -99,7 +100,7 @@ export default class Erc20Holdable implements ContractRepository {
         });
     }
 
-    let res = await contract.methods.transfer(winningBet.address, web3.utils.toWei((this._maxBets*winningBet.amount).toString())).send({from: owner}).then(result => {
+    await contract.methods.transfer(winningBet.address, web3.utils.toWei((this._maxBets*winningBet.amount).toString())).send({from: owner}).then(result => {
       console.log('WINNER MONEY TRANSFERRED');
     }).catch(err => {
       console.log('Error: ' + err);

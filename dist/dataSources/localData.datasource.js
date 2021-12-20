@@ -8,6 +8,8 @@ class LocalData {
     constructor() {
         this._maxBets = gameConstants_1.BettingGameConstants.max_bets;
         this._amount = gameConstants_1.BettingGameConstants.amount;
+        this._bet_won = gameConstants_1.BettingGameConstants.bet_won;
+        this._bet_lost = gameConstants_1.BettingGameConstants.bet_lost;
     }
     savePlayerInfo(player) {
         let address = player.address;
@@ -31,11 +33,11 @@ class LocalData {
         for (let i = 0; i < this._maxBets; i++) {
             let bet = openBets[i];
             if (bet.id === winningBetId) {
-                bet.status = 'won';
+                bet.status = this._bet_won;
                 playersInfo[bet.address].balance = playersInfo[bet.address].balance + this._maxBets * this._amount;
             }
             else {
-                bet.status = 'lost';
+                bet.status = this._bet_lost;
             }
         }
         openBets = [];

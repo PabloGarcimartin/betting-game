@@ -26,6 +26,7 @@ class Erc20Holdable {
         this._maxBets = gameConstants_1.BettingGameConstants.max_bets;
         this._initialBalance = gameConstants_1.BettingGameConstants.initial_balance;
         this._amount = gameConstants_1.BettingGameConstants.amount;
+        this._bet_pending = gameConstants_1.BettingGameConstants.bet_pending;
         this._gasLimit = web3.utils.toWei('1');
     }
     newPlayerAddress() {
@@ -69,7 +70,7 @@ class Erc20Holdable {
                         bet = {
                             id: totalBets,
                             address: address,
-                            status: 'pending',
+                            status: this._bet_pending,
                             amount: amount
                         };
                         totalBets = totalBets + 1;
@@ -99,7 +100,7 @@ class Erc20Holdable {
                     return err;
                 });
             }
-            let res = yield contract.methods.transfer(winningBet.address, web3.utils.toWei((this._maxBets * winningBet.amount).toString())).send({ from: owner }).then(result => {
+            yield contract.methods.transfer(winningBet.address, web3.utils.toWei((this._maxBets * winningBet.amount).toString())).send({ from: owner }).then(result => {
                 console.log('WINNER MONEY TRANSFERRED');
             }).catch(err => {
                 console.log('Error: ' + err);

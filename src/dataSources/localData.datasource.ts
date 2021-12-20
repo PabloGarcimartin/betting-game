@@ -11,6 +11,8 @@ export default class LocalData implements LocalDataRepository {
 
   private _maxBets = BettingGameConstants.max_bets;
   private _amount = BettingGameConstants.amount;
+  private _bet_won = BettingGameConstants.bet_won;
+  private _bet_lost = BettingGameConstants.bet_lost;
 
   public savePlayerInfo( player: Player ){
     let address = player.address;
@@ -43,10 +45,10 @@ export default class LocalData implements LocalDataRepository {
 
       let bet = openBets[i];
       if(bet.id === winningBetId){
-        bet.status = 'won';
+        bet.status = this._bet_won;
         playersInfo[bet.address].balance = playersInfo[bet.address].balance + this._maxBets*this._amount;
       } else {
-        bet.status = 'lost';
+        bet.status = this._bet_lost;
       }
     }
 
